@@ -9,17 +9,15 @@
 #define SNAKE_COLOUR     RAYWHITE
 #define APPLE_COLOUR     RED
 
-#define TICK_SPEED       3.0
+#define TICK_SPEED       0.1f 
 #define VNULL            (Vector2) { -1, -1 }
 
 #define VERSION          "1.1"
 
-double g_tick = 0;
 
 Vector2 rrandom(int, int);
 bool adeq(Vector2, Vector2, Vector2);
 int cfind(Vector2, Vector2*, int);
-bool tick();
 void fill(Vector2*, Vector2, int);
 bool vcomp(Vector2, Vector2);
 Vector2 scale(Vector2, int);
@@ -48,6 +46,9 @@ new_game:;
         (width / 2) / segment_side,
         (height / 2) / segment_side
     };
+    
+    // track tick
+    float tick = 0.0f;
 
     while (!WindowShouldClose()) {
 
@@ -76,8 +77,11 @@ new_game:;
         /* ~~~~~~ GAME ~~~~~~ */
 
         /* if not tick, no reason drawing */
-        if (!tick()) {
-            continue;
+        if (tick >= 1.0f) {
+            tick = 0.0f;
+        } else {
+            tick += TICK_SPEED;
+            goto draw;
         }
 
         /* move the snake */
@@ -112,6 +116,8 @@ new_game:;
                 snake[length-1].y + (snake[length-1].y - snake[length-2].y)
             };
         }
+
+        draw:
 
         BeginDrawing();
 
@@ -161,17 +167,6 @@ int cfind(Vector2 item, Vector2* arr, int arrl) {
         }
     }
     return l;
-}
-
-bool tick() {
-    if (g_tick == 0) {
-        g_tick = GetTime();
-    }
-    if (GetTime() - g_tick > 1.0 / TICK_SPEED) {
-        g_tick = GetTime();
-        return true;
-    }
-    return false;
 }
 
 void fill(Vector2* snake, Vector2 from, int count) {
