@@ -36,15 +36,14 @@ int main(void) {
     
 new_game:;
 
-    Vector2 snake[
-            ((width + height) / 2) / segment_side
-        ]; fill(snake, (Vector2) { 1, 1 }, 3);
+    Vector2 snake[width * height / segment_side];
+    fill(snake, (Vector2) { 1, 1 }, 3);
     Vector2 next = (Vector2) { 1, 0 };
     int length = 3;
 
     Vector2 apple = {
-        (width / 2) / segment_side,
-        (height / 2) / segment_side
+        ((float)width / 2) / segment_side,
+        ((float)height / 2) / segment_side
     };
     
     // track tick
@@ -91,8 +90,8 @@ new_game:;
         snake[0] = (Vector2) { snake[0].x + next.x, snake[0].y + next.y };
 
         /* collisions */
-        if (snake[0].x >= width / segment_side ||
-                snake[0].y >= height / segment_side ||
+        if (snake[0].x >= (float)width / segment_side ||
+                snake[0].y >= (float)height / segment_side ||
                 snake[0].x < 0 || snake[0].y < 0) {
             goto new_game;
         }
